@@ -1,11 +1,14 @@
 import express from "express";
+const app = express();
 import mongoose from "mongoose";
 import { userModel } from "./model/userSchema.js";
 import chalk from "chalk";
-const app = express();
+import cors from "cors";
+
 const PORT = 5000 || 3000;
 
 app.use(express.json());
+app.use(cors());
 
 const MONGODB_URI = `mongodb+srv://admin:admin@cluster0.ur9er0t.mongodb.net/`;
 
