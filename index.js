@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { userModel } from "./model/userSchema.js";
 import chalk from "chalk";
 const app = express();
-const PORT = 5000;
+const PORT = 5000 || 3000;
 
 app.use(express.json());
 
@@ -21,66 +21,104 @@ mongoose
 // user api's
 
 app.get("/api/getusers", async (req, res) => {
-  const getData = await userModel.find();
+  try {
+    const getData = await userModel.find();
 
-  res.json({
-    message: "get user data successfully...",
-    getData,
-  });
+    res.json({
+      message: "get user data successfully...",
+      getData,
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error..",
+      error,
+    });
+  }
 });
 
 app.post("/api/createuser", async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
+    if (!name || !email || !password) {
+      res.json({
+        message: "Required fields are missing..",
+        status: false,
+      });
+    }
+
+    const userObj = {
+      name,
+      email,
+      password,
+    };
+
+    //   create user on database
+
+    const createData = await userModel.create(userObj);
+
     res.json({
-      message: "Required fields are missing..",
-      status: false,
+      message: "user create successfully..",
+      data: createData,
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error",
+      error,
     });
   }
-
-  const userObj = {
-    name,
-    email,
-    password,
-  };
-
-  //   create user on database
-
-  const createData = await userModel.create(userObj);
-
-  res.json({
-    message: "user create successfully..",
-    data: createData,
-  });
 });
 
 app.put("/api/updateuser", async (req, res) => {
-  const body = req.body;
+  try {
+    const body = req.body;
 
-  const updateData = await userModel.findByIdAndUpdate(
-    "68c194584fa0a225841ee994",
-    body
-  );
+    const updateData = await userModel.findByIdAndUpdate(
+      "68c194584fa0a225841ee994",
+      body
+    );
 
-  res.json({
-    message: "user updated",
-    updateData,
-  });
+    res.json({
+      message: "user updated",
+      updateData,
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error",
+      error,
+    });
+  }
 });
 
 app.delete("/api/deleteuser/:id", async (req, res) => {
-  const params = req.params.id;
+  try {
+    const params = req.params.id;
 
-  const deleteData = await userModel.findByIdAndDelete(params);
+    const deleteData = await userModel.findByIdAndDelete(params);
 
-  res.json({
-    message: "user delete successfully...",
-  });
+    res.json({
+      message: "user delete successfully...",
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error",
+      error,
+    });
+  }
 });
 
 app.get("/", (req, res) => {
-  res.send("server is now running");
+  try {
+    res.json({
+      message: "server is now running",
+      status: true,
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error",
+      error,
+    });
+  }
 });
 
 // chalk
