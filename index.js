@@ -5,7 +5,7 @@ import { userModel } from "./model/userSchema.js";
 import chalk from "chalk";
 import cors from "cors";
 
-const PORT = 5000 || 3000;
+const PORT = 5000;
 
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
@@ -49,6 +49,7 @@ app.post("/api/createuser", async (req, res) => {
         message: "Required fields are missing..",
         status: false,
       });
+      return;
     }
 
     const userObj = {
@@ -73,14 +74,12 @@ app.post("/api/createuser", async (req, res) => {
   }
 });
 
-app.put("/api/updateuser", async (req, res) => {
+app.put("/api/updateuser/:id", async (req, res) => {
   try {
+    const params = req.params.id;
     const body = req.body;
 
-    const updateData = await userModel.findByIdAndUpdate(
-      "68c194584fa0a225841ee994",
-      body
-    );
+    const updateData = await userModel.findByIdAndUpdate(params, body);
 
     res.json({
       message: "user updated",
