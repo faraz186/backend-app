@@ -1,4 +1,4 @@
-import express from "express";
+import express, { urlencoded } from "express";
 const app = express();
 import mongoose from "mongoose";
 import { userModel } from "./model/userSchema.js";
@@ -8,6 +8,7 @@ import cors from "cors";
 const PORT = 5000 || 3000;
 
 app.use(express.json());
+app.use(urlencoded({ extended: true }));
 app.use(cors());
 
 const MONGODB_URI = `mongodb+srv://admin:admin@cluster0.ur9er0t.mongodb.net/`;
